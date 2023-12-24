@@ -24,11 +24,12 @@ int main()
 	blockSprite.setTexture(blockTexture);	
 
 	// create the game window
-	sf::RenderWindow window(sf::VideoMode(640, 800), "Tetris Game Window");	
+	sf::RenderWindow window(sf::VideoMode(983, 799), "Tetris Game Window");	
 	
 	window.setFramerateLimit(30);				// set a max framerate of 30 FPS
 
-	const Point gameboardOffset{ 54, 125 };		// the pixel offset of the top left of the gameboard 
+	// Website to find pixel location: https://pixspy.com/
+	const Point gameboardOffset{ 332, 135 };	// the pixel offset of the top left of the gameboard 
 	const Point nextShapeOffset{ 490, 210 };	// the pixel offset of the next shape Tetromino
 
 	// set up a tetris game
