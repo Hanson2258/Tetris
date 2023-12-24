@@ -1,5 +1,5 @@
 # Tetris - Recreating the Tetris game in C++
-Orignally a school lab prooject, (V1.0,) future versions will be independent releases and improvements of the game.
+Orignally a school lab prooject, (v1.0,) future versions will be independent releases and improvements of the game.
 
 This project uses the SFML library.
 
