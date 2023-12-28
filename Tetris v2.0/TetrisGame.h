@@ -16,7 +16,7 @@ class TetrisGame
 		static const int BLOCK_HEIGHT;			  // Pixel height of a Tetris block, int to 32
 		static const double MAX_SECONDS_PER_TICK; // The slowest "tick" rate (in seconds), init to 0.75
 		static const double MIN_SECONDS_PER_TICK; // The fastest "tick" rate (in seconds), init to 0.20
-		static const int NUM_NEXT_SHAPES;	  // Number of next shapes
+		static constexpr int NUM_NEXT_SHAPES{ 3 }; // Number of next shapes
 
 	private:	
 		// MEMBER VARIABLES
@@ -52,12 +52,8 @@ class TetrisGame
 		sf::RenderWindow& window;		// The window that we are drawing on
 		sf::Sprite& blockSprite;		// The sprite used for all the blocks
 		const Point gameboardOffset;	// Pixel XY offset of the gameboard on the screen
-		const Point nextShape1Center;	// Pixel XY center for nextShape1
-		const Point nextShape2Center;	// Pixel XY center for nextShape2
-		const Point nextShape3Center;	// Pixel XY center for nextShape3
-		Point nextShape1Offset;			// Pixel XY offset for nextShape1
-		Point nextShape2Offset;			// Pixel XY offset for nextShape2
-		Point nextShape3Offset;			// Pixel XY offset for nextShape3
+		const Point* nextShapeCenter;	// Pixel XY center for nextShape(s)
+		Point nextShapeOffset[NUM_NEXT_SHAPES];		// Pixel XY offset for nextShape(s)
 
 		sf::Font font;					// SFML font for text
 		sf::Text title;					// SFML text object for displaying the title
@@ -85,11 +81,8 @@ class TetrisGame
 		// - param 1: Render Window object
 		// - param 2: Sprite object
 		// - param 3: Point object (the offset of the gameboard)
-		// - param 4: Point object (the first next shape's center)
-		// - param 5: Point object (the second next shape's center)
-		// - param 6: Point object (the third next shape's center)
-		TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset,
-					const Point& nextShape1Center, const Point& nextShape2Center, const Point& nextShape3Center);
+		// - param 4: Point object array (next shape(s) center)
+		TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset, const Point nextShapeCenter[]);
 
 		// Draw anything to do with the game, includes:
 		// board, currentShape, nextShape, score

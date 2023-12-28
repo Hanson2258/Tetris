@@ -9,17 +9,14 @@ const int TetrisGame::BLOCK_WIDTH{ 32 };
 const int TetrisGame::BLOCK_HEIGHT{ 32 };
 const double TetrisGame::MAX_SECONDS_PER_TICK{ 0.75 };
 const double TetrisGame::MIN_SECONDS_PER_TICK{ 0.20 };
-const int TetrisGame::NUM_NEXT_SHAPES{ 3 };
 
 
 // ====================================
 // ========= Member Functions =========
 // ====================================
 
-TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset,
-						const Point& nextShape1Center, const Point& nextShape2Center, const Point& nextShape3Center)
-    : window(window), blockSprite(blockSprite), gameboardOffset(gameboardOffset),
-			nextShape1Center(nextShape1Center), nextShape2Center(nextShape2Center), nextShape3Center(nextShape3Center)
+TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset, const Point nextShapeCenter[])
+    : window(window), blockSprite(blockSprite), gameboardOffset(gameboardOffset), nextShapeCenter(nextShapeCenter)
 {
 	reset();
 
@@ -69,9 +66,19 @@ TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const 
 void TetrisGame::draw() const
 {
 	drawTetromino(currentShape, gameboardOffset);
-	drawTetromino(pNextShape->shape, nextShape1Center);
-	drawTetromino(pNextShape->pNext->shape, nextShape2Center);
-	drawTetromino(pNextShape->pNext->pNext->shape, nextShape3Center);
+
+	// NextShape* pHead = pNextShape;
+	// for (int i = 0; i < NUM_NEXT_SHAPES; i++)
+	// {
+	// 	drawTetromino(pNextShape->shape, nextShapeOffset[i]);
+	//
+	// 	pHead = pHead->pNext;
+	// }
+	// delete pHead;
+
+	drawTetromino(pNextShape->shape, nextShapeOffset[0]);
+	drawTetromino(pNextShape->pNext->shape, nextShapeOffset[1]);
+	drawTetromino(pNextShape->pNext->pNext->shape, nextShapeOffset[2]);
 	drawGameboard();
 
 	window.draw(title);
@@ -212,17 +219,17 @@ void TetrisGame::reset()
 
 void TetrisGame::setStartingShapes()
 {
-	pNextShape->shape.setShape(Tetromino::getRandomShape());
-	pNextShape->pNext = nullptr;
-
 	NextShape* pHead = pNextShape;
 
-	for (int i = 1; i < NUM_NEXT_SHAPES; i++)
+	for (int i = 0; i < NUM_NEXT_SHAPES; i++)
 	{
 		NextShape* pTemp = new NextShape;
 
 		pTemp->shape.setShape(Tetromino::getRandomShape());
 		pTemp->pNext = nullptr;
+
+		nextShapeOffset[i].setXY(nextShapeCenter[i].getX() - (pNextShape->shape.getXViewBlockOffset() * BLOCK_WIDTH),
+			nextShapeCenter[i].getY() - (pNextShape->shape.getYViewBlockOffset() * BLOCK_HEIGHT));
 
 		pHead->pNext = pTemp;
 

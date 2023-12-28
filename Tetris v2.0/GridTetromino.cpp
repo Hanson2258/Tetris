@@ -5,6 +5,16 @@ GridTetromino::GridTetromino()
 	setGridLoc(0, 0);
 }
 
+float GridTetromino::getXViewBlockOffset() const
+{
+	return xViewBlockOffset;
+}
+
+float GridTetromino::getYViewBlockOffset() const
+{
+	return yViewBlockOffset;
+}
+
 Point GridTetromino::getGridLoc() const
 {
 	return gridLoc;

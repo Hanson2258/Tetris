@@ -23,6 +23,12 @@ public:
 	//  - Initialize gridLoc to 0,0
 	GridTetromino();
 
+	// Get xViewBlockOffset
+	float getXViewBlockOffset() const;
+
+	// Get yViewBlockOffset
+	float getYViewBlockOffset() const;
+
 	// Get the tetromino's location
 	// - return: a Point (the private member variable gridLoc) 
 	Point getGridLoc() const;

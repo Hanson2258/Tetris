@@ -30,12 +30,18 @@ int main()
 
 	// Website to find pixel location: https://pixspy.com/
 	const Point gameboardOffset{ 332, 135 };	// the pixel offset of the top left of the gameboard 
-	const Point nextShape1Center{770, 207 };	// the center for the pixel offset of the first next shape Tetromino
-	const Point nextShape2Center{770, 302 };	// the center for the pixel offset of the second next shape Tetromino
-	const Point nextShape3Center{770, 397 };	// the center for the pixel offset of the third next shape Tetromino
+
+	// An array of nextShapeCenters
+	const Point nextShapeCenter[]
+	{
+		Point{802, 239 },	// the center for the pixel offset of the first next shape Tetromino
+		Point{802, 334 },	// the center for the pixel offset of the second next shape Tetromino
+		Point{802, 429 }	// the center for the pixel offset of the third next shape Tetromino
+	};
+
 
 	// set up a tetris game
-	TetrisGame game(window, blockSprite, gameboardOffset, nextShape1Center, nextShape2Center, nextShape3Center);
+	TetrisGame game(window, blockSprite, gameboardOffset, nextShapeCenter);
 
 	// set up a clock so we can determine seconds per game loop
 	sf::Clock clock;		

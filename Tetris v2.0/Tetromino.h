@@ -63,4 +63,8 @@ class Tetromino
 
 		protected:
 			std::vector<Point> blockLocs;
+
+			// Offset for x and y when viewing (for either being on hold, or on next blocks)
+			float xViewBlockOffset;
+			float yViewBlockOffset;
 };

@@ -41,6 +41,9 @@ void Tetromino::setShape(const TetShape& shape)
 			};
 			color = TetColor::RED;
 
+			xViewBlockOffset = 0;
+			yViewBlockOffset = 1;
+
 			break;
 
 		case TetShape::Z:
@@ -51,6 +54,9 @@ void Tetromino::setShape(const TetShape& shape)
 				Point( 1, 0)
 			};
 			color = TetColor::GREEN;
+
+			xViewBlockOffset = 0;
+			yViewBlockOffset = 0;
 
 			break;
 
@@ -63,6 +69,9 @@ void Tetromino::setShape(const TetShape& shape)
 			};
 			color = TetColor::BLUE_DARK;
 
+			xViewBlockOffset = 0;
+			yViewBlockOffset = 0;
+
 			break;
 
 		case TetShape::L:
@@ -73,6 +82,9 @@ void Tetromino::setShape(const TetShape& shape)
 				Point( 1,-1)
 			};
 			color = TetColor::ORANGE;
+
+			xViewBlockOffset = 0;
+			yViewBlockOffset = 0;
 
 			break;
 
@@ -85,6 +97,9 @@ void Tetromino::setShape(const TetShape& shape)
 			};
 			color = TetColor::YELLOW;
 
+			xViewBlockOffset = 0;
+			yViewBlockOffset = 0;
+
 			break;
 
 		case TetShape::I:
@@ -96,6 +111,9 @@ void Tetromino::setShape(const TetShape& shape)
 			};
 			color = TetColor::BLUE_LIGHT;
 
+			xViewBlockOffset = 0;
+			yViewBlockOffset = 0;
+
 			break;
 
 		case TetShape::T:
@@ -106,6 +124,9 @@ void Tetromino::setShape(const TetShape& shape)
 				Point( 0,-1)
 			};
 			color = TetColor::PURPLE;
+
+			xViewBlockOffset = 0;
+			yViewBlockOffset = 0;
 
 			break;
 
