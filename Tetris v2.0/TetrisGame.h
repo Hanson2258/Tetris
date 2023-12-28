@@ -16,6 +16,7 @@ class TetrisGame
 		static const int BLOCK_HEIGHT;			  // Pixel height of a Tetris block, int to 32
 		static const double MAX_SECONDS_PER_TICK; // The slowest "tick" rate (in seconds), init to 0.75
 		static const double MIN_SECONDS_PER_TICK; // The fastest "tick" rate (in seconds), init to 0.20
+		static const int NUM_NEXT_SHAPES;	  // Number of next shapes
 
 	private:	
 		// MEMBER VARIABLES
@@ -23,8 +24,17 @@ class TetrisGame
 		// State members ---------------------------------------------
 		int score;					// The current game score.
 	    Gameboard board;			// The gameboard (grid) to represent where all the blocks are
-	    GridTetromino nextShape;	// The tetromino shape that is "on deck"
 	    GridTetromino currentShape;	// The tetromino that is currently falling
+		
+
+		// NextShape linked list
+		struct NextShape
+		{
+			GridTetromino shape;
+			NextShape* pNext;
+		};
+
+		NextShape* pNextShape = new NextShape;
 
 		// Scoring points for actions
 		enum class scoringActions
@@ -42,7 +52,9 @@ class TetrisGame
 		sf::RenderWindow& window;		// The window that we are drawing on
 		sf::Sprite& blockSprite;		// The sprite used for all the blocks
 		const Point gameboardOffset;	// Pixel XY offset of the gameboard on the screen
-		const Point nextShapeOffset;	// Pixel XY offset to the nextShape
+		const Point nextShape1Offset;	// Pixel XY offset to the nextShape1
+		const Point nextShape2Offset;	// Pixel XY offset to the nextShape2
+		const Point nextShape3Offset;	// Pixel XY offset to the nextShape3
 
 		sf::Font font;					// SFML font for text
 		sf::Text title;					// SFML text object for displaying the title
@@ -71,7 +83,7 @@ class TetrisGame
 		// - param 2: Sprite object
 		// - param 3: Point object (the offset of the gameboard)
 		// - param 4: Point object (the next shape's offset)
-		TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset, const Point& nextShapeOffset);
+		TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset);
 
 		// Draw anything to do with the game, includes:
 		// board, currentShape, nextShape, score
@@ -102,6 +114,10 @@ class TetrisGame
 		//  - Pick & spawn next shape
 		//  - Pick next shape again (for the "on-deck" shape)
 		void reset();
+
+		// Set the starting shape, and populate 3 shapes for the linked list of
+		// next shapes
+		void setStartingShapes();
 
 		// Assign nextShape.setShape a new random shape  
 		void pickNextShape();

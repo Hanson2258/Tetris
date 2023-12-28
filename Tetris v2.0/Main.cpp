@@ -30,10 +30,12 @@ int main()
 
 	// Website to find pixel location: https://pixspy.com/
 	const Point gameboardOffset{ 332, 135 };	// the pixel offset of the top left of the gameboard 
-	const Point nextShapeOffset{ 490, 210 };	// the pixel offset of the next shape Tetromino
+	// const Point nextShape1Offset{770, 207 };	// the pixel offset of the next shape Tetromino
+	// const Point nextShape2Offset{770, 302 };	// the pixel offset of the next shape Tetromino
+	// const Point nextShape3Offset{770, 397 };	// the pixel offset of the next shape Tetromino
 
 	// set up a tetris game
-	TetrisGame game(window, blockSprite, gameboardOffset, nextShapeOffset);
+	TetrisGame game(window, blockSprite, gameboardOffset);
 
 	// set up a clock so we can determine seconds per game loop
 	sf::Clock clock;		
