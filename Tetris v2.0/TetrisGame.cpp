@@ -9,6 +9,7 @@ const int TetrisGame::BLOCK_WIDTH{ 32 };
 const int TetrisGame::BLOCK_HEIGHT{ 32 };
 const double TetrisGame::MAX_SECONDS_PER_TICK{ 0.75 };
 const double TetrisGame::MIN_SECONDS_PER_TICK{ 0.20 };
+const int TetrisGame::NEXT_SHAPE_Y_SPACE{ 95 };
 
 
 // ====================================
@@ -76,9 +77,9 @@ void TetrisGame::draw() const
 	// }
 	// delete pHead;
 
-	drawTetromino(pNextShape->shape, nextShapeOffset[0]);
-	drawTetromino(pNextShape->pNext->shape, nextShapeOffset[1]);
-	drawTetromino(pNextShape->pNext->pNext->shape, nextShapeOffset[2]);
+	drawTetromino(pNextShapeHead->shape, nextShapeOffset[0]);
+	drawTetromino(pNextShapeHead->pNext->shape, nextShapeOffset[1]);
+	drawTetromino(pNextShapeHead->pNext->pNext->shape, nextShapeOffset[2]);
 	drawGameboard();
 
 	window.draw(title);
@@ -212,6 +213,9 @@ void TetrisGame::reset()
 
 	board.empty();
 
+	pNextShapeHead = nullptr;
+	pNextShapeTail = nullptr;
+
 	setStartingShapes();
 	spawnNextShape();
 	pickNextShape();
@@ -219,53 +223,76 @@ void TetrisGame::reset()
 
 void TetrisGame::setStartingShapes()
 {
-	NextShape* pHead = pNextShape;
-
 	for (int i = 0; i < NUM_NEXT_SHAPES; i++)
 	{
-		NextShape* pTemp = new NextShape;
+		NextShapes* pNextShape = addNewShape();
 
-		pTemp->shape.setShape(Tetromino::getRandomShape());
-		pTemp->pNext = nullptr;
-
-		nextShapeOffset[i].setXY(nextShapeCenter[i].getX() - (pNextShape->shape.getXViewBlockOffset() * BLOCK_WIDTH),
-			nextShapeCenter[i].getY() - (pNextShape->shape.getYViewBlockOffset() * BLOCK_HEIGHT));
-
-		pHead->pNext = pTemp;
-
-		pHead = pHead->pNext;
+		// If pNextShapeHead is nullptr
+		if (!pNextShapeHead)
+		{
+			pNextShapeHead = pNextShape;
+			pNextShapeTail = pNextShape;
+		}
+		else
+		{
+			pNextShapeTail->pNext = pNextShape;
+			pNextShapeTail = pNextShape;
+		}
 	}
+}
+
+TetrisGame::NextShapes* TetrisGame::addNewShape()
+{
+	static int numNextShapes{ 0 };	// Current number of next shapes
+
+	NextShapes* pNextShape = new NextShapes;
+	pNextShape->shape.setShape(Tetromino::getRandomShape());
+	pNextShape->viewOffset = Point{ static_cast<int>(pNextShape->shape.getXViewBlockOffset() * BLOCK_WIDTH),
+									static_cast<int>(pNextShape->shape.getYViewBlockOffset() * BLOCK_HEIGHT) };
+	pNextShape->pNext = nullptr;
+
+	nextShapeOffset[numNextShapes] = Point{ nextShapeCenter[numNextShapes].getX() - pNextShape->viewOffset.getX(),
+											nextShapeCenter[numNextShapes].getY() - pNextShape->viewOffset.getY() };
+
+	numNextShapes++;
+
+	return pNextShape;
 }
 
 void TetrisGame::pickNextShape()
 {
-	// Temp pointer to hold next, next shape
-	NextShape* pHead = pNextShape->pNext;
+	// Hold the address for pNextShapeHead
+	NextShapes* pTemp = pNextShapeHead;
 
-	// Delete pNextShape
-	delete pNextShape;
-	pNextShape = nullptr;
+	// Move pHead to pNext
+	pNextShapeHead = pNextShapeHead->pNext;
 
-	// Assign pNextShape to what was next, next shape
-	pNextShape = pHead;
+	// Delete pNextShapeHead
+	delete pTemp;
 
-	// Move to the second last node
-	for (int i = 1; i < NUM_NEXT_SHAPES - 1; i++)
+	// Add a shape to the tail
+	pTemp = addNewShape();
+
+	pNextShapeTail->pNext = pTemp;
+	pNextShapeTail = pTemp;
+
+	// Recalculate y-axis for all shapes
+	pTemp = pNextShapeHead;
+	for (int i = 0; i < NUM_NEXT_SHAPES; i++)
 	{
-		pHead = pHead->pNext;
+		nextShapeOffset[i] = Point{ nextShapeCenter[i].getX() - pTemp->viewOffset.getX(),
+									nextShapeCenter[i].getY() - pTemp->viewOffset.getY() };
+
+		pTemp = pTemp->pNext;
 	}
 
-	NextShape* pTemp = new NextShape;
-
-	pTemp->shape.setShape(Tetromino::getRandomShape());
-	pTemp->pNext = nullptr;
-
-	pHead->pNext = pTemp;
+	// Delete pTemp
+	delete pTemp;
 }
 
 bool TetrisGame::spawnNextShape()
 {
-	currentShape.setShape(pNextShape->shape.getShape());
+	currentShape.setShape(pNextShapeHead->shape.getShape());
 	currentShape.setGridLoc(board.getSpawnLoc().getX(), board.getSpawnLoc().getY());
 
 	return isPositionLegal(currentShape);

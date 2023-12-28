@@ -31,13 +31,15 @@ int main()
 	// Website to find pixel location: https://pixspy.com/
 	const Point gameboardOffset{ 332, 135 };	// the pixel offset of the top left of the gameboard 
 
+	const Point firstNextShapeCenterPoint{ 802, 239 }; // the center for the pixel offset of the first next shape Tetromino
+
 	// An array of nextShapeCenters
-	const Point nextShapeCenter[]
+	Point nextShapeCenter[TetrisGame::NUM_NEXT_SHAPES]{ firstNextShapeCenterPoint };
+
+	for (int i = 1; i < TetrisGame::NUM_NEXT_SHAPES; i++)
 	{
-		Point{802, 239 },	// the center for the pixel offset of the first next shape Tetromino
-		Point{802, 334 },	// the center for the pixel offset of the second next shape Tetromino
-		Point{802, 429 }	// the center for the pixel offset of the third next shape Tetromino
-	};
+		nextShapeCenter[i] = Point{ 802, nextShapeCenter[0].getY() + TetrisGame::NEXT_SHAPE_Y_SPACE };
+	}
 
 
 	// set up a tetris game

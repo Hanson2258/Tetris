@@ -16,6 +16,7 @@ class TetrisGame
 		static const int BLOCK_HEIGHT;			  // Pixel height of a Tetris block, int to 32
 		static const double MAX_SECONDS_PER_TICK; // The slowest "tick" rate (in seconds), init to 0.75
 		static const double MIN_SECONDS_PER_TICK; // The fastest "tick" rate (in seconds), init to 0.20
+		static const int NEXT_SHAPE_Y_SPACE;	  // What is the spacing between the next shapes in the Y column
 		static constexpr int NUM_NEXT_SHAPES{ 3 }; // Number of next shapes
 
 	private:	
@@ -28,13 +29,16 @@ class TetrisGame
 		
 
 		// NextShape linked list
-		struct NextShape
+		struct NextShapes
 		{
 			GridTetromino shape;
-			NextShape* pNext;
+			Point viewOffset;
+			NextShapes* pNext;
 		};
 
-		NextShape* pNextShape = new NextShape;
+		// Creating linked list of Next Shape
+		NextShapes* pNextShapeHead;
+		NextShapes* pNextShapeTail;
 
 		// Scoring points for actions
 		enum class scoringActions
@@ -87,7 +91,7 @@ class TetrisGame
 		// Draw anything to do with the game, includes:
 		// board, currentShape, nextShape, score
 		// - Called every game loop
-		void draw() const;								
+		void draw() const;
 
 		// Event and game loop processing
 		// - handles keypress events (up, left, right, down, space)
@@ -118,13 +122,15 @@ class TetrisGame
 		// next shapes
 		void setStartingShapes();
 
+		NextShapes* addNewShape();
+
 		// Assign nextShape.setShape a new random shape  
 		void pickNextShape();
 		
 		// Copy the nextShape into the currentShape (through assignment)
 		// Position the currentShape to its spawn location.
 		// - return: bool, true/false based on isPositionLegal()
-		bool spawnNextShape();																	
+		bool spawnNextShape();
 
 		// Test if a rotation is legal on the tetromino and if so, rotate it. 
 		// - param 1: GridTetromino shape
