@@ -54,34 +54,34 @@ void Tetromino::setShape(const TetShape& shape)
 
 			break;
 
+		case TetShape::J:
+			blockLocs = {
+				Point(-1,-1),
+				Point(-1, 0),
+				Point( 0, 0),
+				Point( 1, 0)
+			};
+			color = TetColor::BLUE_DARK;
+
+			break;
+
 		case TetShape::L:
 			blockLocs = {
-				Point( 0, 1),
+				Point(-1, 0),
 				Point( 0, 0),
-				Point( 0,-1),
+				Point( 1, 0),
 				Point( 1,-1)
 			};
 			color = TetColor::ORANGE;
 
 			break;
 
-		case TetShape::J:
-			blockLocs = {
-				Point( 0, 1),
-				Point( 0, 0),
-				Point( 0,-1),
-				Point(-1,-1)
-			};
-			color = TetColor::BLUE_DARK;
-
-			break;
-
 		case TetShape::O:
 			blockLocs = {
-				Point( 0, 0),
+				Point(-1, 0),
+				Point(-1, 1),
 				Point( 0, 1),
-				Point( 1, 1),
-				Point( 1, 0)
+				Point( 0, 0)
 			};
 			color = TetColor::YELLOW;
 
@@ -89,10 +89,10 @@ void Tetromino::setShape(const TetShape& shape)
 
 		case TetShape::I:
 			blockLocs = {
-				Point( 0, 2),
-				Point( 0, 1),
-				Point( 0, 0),
-				Point( 0,-1)
+				Point(-2, 0),
+				Point(-1, 0),
+				Point(0, 0),
+				Point(1,0)
 			};
 			color = TetColor::BLUE_LIGHT;
 
