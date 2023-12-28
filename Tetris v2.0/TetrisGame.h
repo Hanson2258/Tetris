@@ -52,9 +52,12 @@ class TetrisGame
 		sf::RenderWindow& window;		// The window that we are drawing on
 		sf::Sprite& blockSprite;		// The sprite used for all the blocks
 		const Point gameboardOffset;	// Pixel XY offset of the gameboard on the screen
-		const Point nextShape1Offset;	// Pixel XY offset to the nextShape1
-		const Point nextShape2Offset;	// Pixel XY offset to the nextShape2
-		const Point nextShape3Offset;	// Pixel XY offset to the nextShape3
+		const Point nextShape1Center;	// Pixel XY center for nextShape1
+		const Point nextShape2Center;	// Pixel XY center for nextShape2
+		const Point nextShape3Center;	// Pixel XY center for nextShape3
+		Point nextShape1Offset;			// Pixel XY offset for nextShape1
+		Point nextShape2Offset;			// Pixel XY offset for nextShape2
+		Point nextShape3Offset;			// Pixel XY offset for nextShape3
 
 		sf::Font font;					// SFML font for text
 		sf::Text title;					// SFML text object for displaying the title
@@ -82,8 +85,11 @@ class TetrisGame
 		// - param 1: Render Window object
 		// - param 2: Sprite object
 		// - param 3: Point object (the offset of the gameboard)
-		// - param 4: Point object (the next shape's offset)
-		TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset);
+		// - param 4: Point object (the first next shape's center)
+		// - param 5: Point object (the second next shape's center)
+		// - param 6: Point object (the third next shape's center)
+		TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset,
+					const Point& nextShape1Center, const Point& nextShape2Center, const Point& nextShape3Center);
 
 		// Draw anything to do with the game, includes:
 		// board, currentShape, nextShape, score

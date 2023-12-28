@@ -16,8 +16,10 @@ const int TetrisGame::NUM_NEXT_SHAPES{ 3 };
 // ========= Member Functions =========
 // ====================================
 
-TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset)
-    : window(window), blockSprite(blockSprite), gameboardOffset(gameboardOffset)
+TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset,
+						const Point& nextShape1Center, const Point& nextShape2Center, const Point& nextShape3Center)
+    : window(window), blockSprite(blockSprite), gameboardOffset(gameboardOffset),
+			nextShape1Center(nextShape1Center), nextShape2Center(nextShape2Center), nextShape3Center(nextShape3Center)
 {
 	reset();
 
@@ -67,7 +69,9 @@ TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const 
 void TetrisGame::draw() const
 {
 	drawTetromino(currentShape, gameboardOffset);
-	drawTetromino(pNextShape->shape, gameboardOffset);
+	drawTetromino(pNextShape->shape, nextShape1Center);
+	drawTetromino(pNextShape->pNext->shape, nextShape2Center);
+	drawTetromino(pNextShape->pNext->pNext->shape, nextShape3Center);
 	drawGameboard();
 
 	window.draw(title);
@@ -203,6 +207,7 @@ void TetrisGame::reset()
 
 	setStartingShapes();
 	spawnNextShape();
+	pickNextShape();
 }
 
 void TetrisGame::setStartingShapes()
@@ -254,7 +259,6 @@ void TetrisGame::pickNextShape()
 bool TetrisGame::spawnNextShape()
 {
 	currentShape.setShape(pNextShape->shape.getShape());
-	pickNextShape();
 	currentShape.setGridLoc(board.getSpawnLoc().getX(), board.getSpawnLoc().getY());
 
 	return isPositionLegal(currentShape);
