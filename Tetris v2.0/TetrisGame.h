@@ -44,8 +44,12 @@ class TetrisGame
 		const Point gameboardOffset;	// Pixel XY offset of the gameboard on the screen
 		const Point nextShapeOffset;	// Pixel XY offset to the nextShape
 
-		sf::Font scoreFont;				// SFML font for displaying the score
-		sf::Text scoreText;				// SFML text object for displaying the score
+		sf::Font font;					// SFML font for text
+		sf::Text title;					// SFML text object for displaying the title
+		sf::Text hold;					// SFML text object for displaying the block in hold
+		sf::Text nextBlock;				// SFML text object for displaying the next blocks
+		sf::Text scoreTitle;			// SFML text object for displaying the score title
+		sf::Text scoreDisplay;			// SFML text object for displaying the score
 										
 		// Time members ----------------------------------------------
 		// Note: a "tick" is the amount of time it takes a block to fall one line.

@@ -1,6 +1,7 @@
 #include "TetrisGame.h"
 
 #include <cassert>
+#include <iostream>
 #include <thread>
 
 // Initializing the static variables
@@ -20,14 +21,45 @@ TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const 
 	reset();
 
 	// Setup our font for drawing the score
-	if (!scoreFont.loadFromFile("fonts/times new roman.ttf"))
+	if (!font.loadFromFile("fonts/times new roman.ttf"))
 	{
 		assert(false && "Missing font: times new roman.ttf");
 	}
-	scoreText.setFont(scoreFont);
-	scoreText.setCharacterSize(18);
-	scoreText.setFillColor(sf::Color::White);
-	scoreText.setPosition(425, 325);
+
+	// -- Set up text
+	// Title
+	title.setString("Tetris v2.0");
+	title.setFont(font);
+	title.setCharacterSize(35);
+	title.setFillColor(sf::Color::White);
+	title.setPosition(491 - (title.getLocalBounds().width/2), 75 - (title.getLocalBounds().height));
+	
+	// Hold
+	hold.setString("Hold");
+	hold.setFont(font);
+	hold.setCharacterSize(25);
+	hold.setFillColor(sf::Color::White);
+	hold.setPosition(180 - (hold.getLocalBounds().width / 2), 152 - (hold.getLocalBounds().height));
+
+	// Next Block
+	nextBlock.setString("Next Block");
+	nextBlock.setFont(font);
+	nextBlock.setCharacterSize(25);
+	nextBlock.setFillColor(sf::Color::White);
+	nextBlock.setPosition(802 - (nextBlock.getLocalBounds().width / 2), 152 - (nextBlock.getLocalBounds().height));
+
+	// Score Title
+	scoreTitle.setString("Score");
+	scoreTitle.setFont(font);
+	scoreTitle.setCharacterSize(25);
+	scoreTitle.setFillColor(sf::Color::White);
+	scoreTitle.setPosition(187 - (scoreTitle.getLocalBounds().width / 2), 622 - (scoreTitle.getLocalBounds().height));
+
+	// Score Display
+	scoreDisplay.setFont(font);
+	scoreDisplay.setCharacterSize(18);
+	scoreDisplay.setFillColor(sf::Color::White);
+	scoreDisplay.setPosition(188 - (scoreDisplay.getLocalBounds().width / 2), 656 - (scoreDisplay.getLocalBounds().height));
 }
 
 
@@ -37,7 +69,11 @@ void TetrisGame::draw() const
 	drawTetromino(nextShape, nextShapeOffset);
 	drawGameboard();
 
-	window.draw(scoreText);
+	window.draw(title);
+	window.draw(hold);
+	window.draw(nextBlock);
+	window.draw(scoreTitle);
+	window.draw(scoreDisplay);
 }
 
 void TetrisGame::onKeyPressed(const sf::Event& event)
@@ -79,6 +115,9 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 			assert("Something extremely broken!");  // NOLINT(clang-diagnostic-string-conversion)
 			break;
 	}
+
+	// Update score display location based on score
+	scoreDisplay.setPosition(188 - (scoreDisplay.getLocalBounds().width / 2), 656 - (scoreDisplay.getLocalBounds().height));
 }
 
 
@@ -278,7 +317,7 @@ void TetrisGame::drawTetromino(const GridTetromino& tetromino, const Point& topL
 
 void TetrisGame::updateScoreDisplay()
 {
-	scoreText.setString("Score: " + std::to_string(score));
+	scoreDisplay.setString(std::to_string(score));
 }
 
 
