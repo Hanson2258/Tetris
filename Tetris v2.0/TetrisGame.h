@@ -171,6 +171,8 @@ class TetrisGame
 		// - return: nothing
 		void lock(const GridTetromino& shape);
 
+		void deleteNextShapes();
+
 
 
 		// ====================================

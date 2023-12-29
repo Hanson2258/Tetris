@@ -245,8 +245,11 @@ void TetrisGame::reset()
 
 	board.empty();
 
+	deleteNextShapes();
 	pNextShapeHead = nullptr;
 	pNextShapeTail = nullptr;
+
+	holdShapeSet = false;
 
 	setStartingShapes();
 	spawnNextShape();
@@ -286,7 +289,7 @@ void TetrisGame::setStartingShapes()
 {
 	for (int i = 0; i < NUM_NEXT_SHAPES; i++)
 	{
-		NextShapes* pNextShape = addNewShape(true);
+		NextShapes* pNextShape = addNewShape(!i);
 
 		// If pNextShapeHead is nullptr
 		if (!pNextShapeHead)
@@ -305,7 +308,7 @@ void TetrisGame::setStartingShapes()
 TetrisGame::NextShapes* TetrisGame::addNewShape(bool reset)
 {
 	NextShapes* pNextShape = new NextShapes;
-	pNextShape->shape.setShape(Tetromino::getRandomShape(false));
+	pNextShape->shape.setShape(Tetromino::getRandomShape(reset));
 	pNextShape->viewOffset = Point{ static_cast<int>(pNextShape->shape.getXViewBlockOffset() * BLOCK_WIDTH),
 									static_cast<int>(pNextShape->shape.getYViewBlockOffset() * BLOCK_HEIGHT) };
 	pNextShape->pNext = nullptr;
@@ -409,6 +412,22 @@ void TetrisGame::lock(const GridTetromino& shape)
 	}
 
 	shapePlacedSinceLastGameLoop = true;
+}
+
+void TetrisGame::deleteNextShapes()
+{
+	if (pNextShapeHead)
+	{
+		do
+		{
+			NextShapes* pTemp{ pNextShapeHead->pNext };
+
+			delete pNextShapeHead;
+
+			pNextShapeHead = pTemp;
+
+		} while (pNextShapeHead);
+	}
 }
 
 
@@ -546,16 +565,5 @@ void TetrisGame::determineSecondsPerTick()
 // ======================================================
 TetrisGame::~TetrisGame()
 {
-	if(pNextShapeHead)
-	{
-		do
-		{
-			NextShapes* pTemp{ pNextShapeHead->pNext };
-
-			delete pNextShapeHead;
-
-			pNextShapeHead = pTemp;
-			
-		} while (pNextShapeHead);
-	}
+	deleteNextShapes();
 }

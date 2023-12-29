@@ -23,7 +23,7 @@ Tetromino::TetShape Tetromino::getShape() const
 
 Tetromino::TetShape Tetromino::getRandomShape(bool reset)
 {
-	if (numChosenShapes == static_cast<int>(TetShape::COUNT))
+	if ((numChosenShapes == static_cast<int>(TetShape::COUNT)) || (reset))
 	{
 		for (int i = 0, arrayLength = std::size(chosenShapes); i < arrayLength; i++)
 		{
