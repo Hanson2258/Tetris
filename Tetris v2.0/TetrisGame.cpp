@@ -19,8 +19,10 @@ const int TetrisGame::NEXT_SHAPE_Y_SPACE{ 95 };
 // ========= Member Functions =========
 // ====================================
 
-TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset, const Point nextShapeCenter[])
-    : window(window), blockSprite(blockSprite), gameboardOffset(gameboardOffset), nextShapeCenter(nextShapeCenter)
+TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset, 
+						const Point nextShapeCenter[], const Point& holdShapeCenter)
+    : window(window), blockSprite(blockSprite), gameboardOffset(gameboardOffset),
+		nextShapeCenter(nextShapeCenter), holdShapeCenter(holdShapeCenter)
 {
 	reset();
 

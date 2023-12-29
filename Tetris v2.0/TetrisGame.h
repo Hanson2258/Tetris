@@ -59,6 +59,8 @@ class TetrisGame
 		sf::RenderWindow& window;		// The window that we are drawing on
 		sf::Sprite& blockSprite;		// The sprite used for all the blocks
 		const Point gameboardOffset;	// Pixel XY offset of the gameboard on the screen
+		const Point holdShapeCenter;	// Pixel XY center of the hold block area on the screen
+		Point holdShapeOffset;			// Pixel XY offset for the hold block area on the screen
 		const Point* nextShapeCenter;	// Pixel XY center for nextShape(s)
 		Point nextShapeOffset[NUM_NEXT_SHAPES];		// Pixel XY offset for nextShape(s)
 
@@ -89,7 +91,8 @@ class TetrisGame
 		// - param 2: Sprite object
 		// - param 3: Point object (the offset of the gameboard)
 		// - param 4: Point object array (next shape(s) center)
-		TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset, const Point nextShapeCenter[]);
+		TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const Point& gameboardOffset, 
+					const Point nextShapeCenter[], const Point& holdShapeCenter);
 
 		// Draw anything to do with the game, includes:
 		// board, currentShape, nextShape, score
