@@ -246,18 +246,11 @@ void TetrisGame::setStartingShapes()
 
 TetrisGame::NextShapes* TetrisGame::addNewShape()
 {
-	static int numNextShapes{ 0 };	// Current number of next shapes
-
 	NextShapes* pNextShape = new NextShapes;
 	pNextShape->shape.setShape(Tetromino::getRandomShape());
 	pNextShape->viewOffset = Point{ static_cast<int>(pNextShape->shape.getXViewBlockOffset() * BLOCK_WIDTH),
 									static_cast<int>(pNextShape->shape.getYViewBlockOffset() * BLOCK_HEIGHT) };
 	pNextShape->pNext = nullptr;
-
-	nextShapeOffset[numNextShapes] = Point{ nextShapeCenter[numNextShapes].getX() - pNextShape->viewOffset.getX(),
-											nextShapeCenter[numNextShapes].getY() - pNextShape->viewOffset.getY() };
-
-	numNextShapes++;
 
 	return pNextShape;
 }
@@ -477,5 +470,25 @@ void TetrisGame::determineSecondsPerTick()
 	else
 	{
 		secondsPerTick = MIN_SECONDS_PER_TICK;
+	}
+}
+
+
+// ======================================================
+// ===================== Destructor =====================
+// ======================================================
+TetrisGame::~TetrisGame()
+{
+	if(pNextShapeHead)
+	{
+		do
+		{
+			NextShapes* pTemp{ pNextShapeHead->pNext };
+
+			delete pNextShapeHead;
+
+			pNextShapeHead = pTemp;
+			
+		} while (pNextShapeHead);
 	}
 }

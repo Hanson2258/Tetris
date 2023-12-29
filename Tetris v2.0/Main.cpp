@@ -40,7 +40,7 @@ int main()
 
 	for (int i = 1; i < TetrisGame::NUM_NEXT_SHAPES; i++)
 	{
-		nextShapeCenter[i] = Point{ 802, nextShapeCenter[0].getY() + TetrisGame::NEXT_SHAPE_Y_SPACE };
+		nextShapeCenter[i] = Point{ 802, nextShapeCenter[0].getY() + (TetrisGame::NEXT_SHAPE_Y_SPACE * i) };
 	}
 
 

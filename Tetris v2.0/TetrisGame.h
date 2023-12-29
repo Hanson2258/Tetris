@@ -19,6 +19,9 @@ class TetrisGame
 		static const int NEXT_SHAPE_Y_SPACE;	  // What is the spacing between the next shapes in the Y column
 		static constexpr int NUM_NEXT_SHAPES{ 3 }; // Number of next shapes
 
+		~TetrisGame();
+
+
 	private:	
 		// MEMBER VARIABLES
 
