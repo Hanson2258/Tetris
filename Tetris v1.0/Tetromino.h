@@ -46,7 +46,7 @@ class Tetromino
 		void setShape(const TetShape& shape);
 
 		// Chooses a random shape
-		static TetShape getRandomShape();
+		static TetShape getRandomShape(bool reset);
 
 
 		// Rotate the shape 90 degrees around [0,0] (clockwise)

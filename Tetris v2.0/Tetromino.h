@@ -46,7 +46,7 @@ class Tetromino
 		void setShape(const TetShape& shape);
 
 		// Chooses a random shape
-		static TetShape getRandomShape();
+		static TetShape getRandomShape(bool reset);
 
 
 		// Rotate the shape 90 degrees around [0,0] (clockwise)
@@ -60,6 +60,8 @@ class Tetromino
 		private:
 			TetColor color;
 			TetShape shape;
+			static bool chosenShapes[static_cast<int>(TetShape::COUNT)];  // A bool array of size TetShape::COUNT
+			static int numChosenShapes;	// Num of shapes chosen
 
 		protected:
 			std::vector<Point> blockLocs;

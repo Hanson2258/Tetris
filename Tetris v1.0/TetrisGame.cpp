@@ -169,7 +169,7 @@ void TetrisGame::reset()
 
 void TetrisGame::pickNextShape()
 {
-	nextShape.setShape(Tetromino::getRandomShape());
+	nextShape.setShape(Tetromino::getRandomShape(false));
 }
 
 bool TetrisGame::spawnNextShape()

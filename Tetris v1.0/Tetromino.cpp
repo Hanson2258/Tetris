@@ -18,7 +18,7 @@ Tetromino::TetShape Tetromino::getShape() const
 	return shape;
 }
 
-Tetromino::TetShape Tetromino::getRandomShape()
+Tetromino::TetShape Tetromino::getRandomShape(bool reset)
 {
 	int randNum{ rand() % static_cast<int>(TetShape::COUNT) };
 

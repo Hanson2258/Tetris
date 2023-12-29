@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+// Initializing the static variables
+bool Tetromino::chosenShapes[];  // A bool array of size TetShape::COUNT
+int Tetromino::numChosenShapes;	// Num of shapes chosen
 
 Tetromino::Tetromino()
 {
@@ -18,11 +21,37 @@ Tetromino::TetShape Tetromino::getShape() const
 	return shape;
 }
 
-Tetromino::TetShape Tetromino::getRandomShape()
+Tetromino::TetShape Tetromino::getRandomShape(bool reset)
 {
+	if (numChosenShapes == static_cast<int>(TetShape::COUNT))
+	{
+		for (int i = 0, arrayLength = std::size(chosenShapes); i < arrayLength; i++)
+		{
+			chosenShapes[i] = false;
+		}
+
+		numChosenShapes = 0;
+	}
+
 	int randNum{ rand() % static_cast<int>(TetShape::COUNT) };
 
-	return static_cast<TetShape>(randNum);
+	while (chosenShapes[randNum])
+	{
+		if (randNum == static_cast<int>(TetShape::COUNT) - 1)
+		{
+			randNum = 0;
+		}
+		else
+		{
+			randNum++;
+		}
+		
+	}
+
+	chosenShapes[randNum] = true;
+	numChosenShapes++;
+
+ 	return static_cast<TetShape>(randNum);
 }
 
 

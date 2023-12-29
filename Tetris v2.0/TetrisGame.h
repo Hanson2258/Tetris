@@ -136,7 +136,7 @@ class TetrisGame
 		// next shapes
 		void setStartingShapes();
 
-		NextShapes* addNewShape();
+		NextShapes* addNewShape(bool reset);
 
 		// Assign nextShape.setShape a new random shape  
 		void pickNextShape();

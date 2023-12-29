@@ -286,7 +286,7 @@ void TetrisGame::setStartingShapes()
 {
 	for (int i = 0; i < NUM_NEXT_SHAPES; i++)
 	{
-		NextShapes* pNextShape = addNewShape();
+		NextShapes* pNextShape = addNewShape(true);
 
 		// If pNextShapeHead is nullptr
 		if (!pNextShapeHead)
@@ -302,10 +302,10 @@ void TetrisGame::setStartingShapes()
 	}
 }
 
-TetrisGame::NextShapes* TetrisGame::addNewShape()
+TetrisGame::NextShapes* TetrisGame::addNewShape(bool reset)
 {
 	NextShapes* pNextShape = new NextShapes;
-	pNextShape->shape.setShape(Tetromino::getRandomShape());
+	pNextShape->shape.setShape(Tetromino::getRandomShape(false));
 	pNextShape->viewOffset = Point{ static_cast<int>(pNextShape->shape.getXViewBlockOffset() * BLOCK_WIDTH),
 									static_cast<int>(pNextShape->shape.getYViewBlockOffset() * BLOCK_HEIGHT) };
 	pNextShape->pNext = nullptr;
@@ -325,7 +325,7 @@ void TetrisGame::pickNextShape()
 	delete pTemp;
 
 	// Add a shape to the tail
-	pTemp = addNewShape();
+	pTemp = addNewShape(false);
 
 	pNextShapeTail->pNext = pTemp;
 	pNextShapeTail = pNextShapeTail->pNext;
