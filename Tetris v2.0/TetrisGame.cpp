@@ -13,7 +13,8 @@ const int TetrisGame::BLOCK_HEIGHT{ 32 };
 const double TetrisGame::MAX_SECONDS_PER_TICK{ 0.75 };
 const double TetrisGame::MIN_SECONDS_PER_TICK{ 0.20 };
 const int TetrisGame::NEXT_SHAPE_Y_SPACE{ 95 };
-
+bool TetrisGame::holdShapeSet = false;
+bool TetrisGame::holdShapeSetThisRound = false;
 
 // ====================================
 // ========= Member Functions =========
@@ -82,6 +83,10 @@ void TetrisGame::draw() const
 	// }
 	// delete pHead;
 
+	if (holdShapeSet)
+	{
+		drawTetromino(holdShape, holdShapeOffset);
+	}
 	drawTetromino(pNextShapeHead->shape, nextShapeOffset[0]);
 	drawTetromino(pNextShapeHead->pNext->shape, nextShapeOffset[1]);
 	drawTetromino(pNextShapeHead->pNext->pNext->shape, nextShapeOffset[2]);
@@ -123,6 +128,10 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 			attemptMove(currentShape,1,0);
 			break;
 
+		case sf::Keyboard::C:
+			setHoldShape();
+			break;
+
 		case sf::Keyboard::Space:
 			score += drop(currentShape) * static_cast<int>(scoringActions::hardDrop);
 			updateScoreDisplay();
@@ -151,6 +160,8 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 
 	if (shapePlacedSinceLastGameLoop)
 	{
+		holdShapeSetThisRound = false;
+
 		if (spawnNextShape())
 		{
 			pickNextShape();
@@ -224,6 +235,35 @@ void TetrisGame::reset()
 	setStartingShapes();
 	spawnNextShape();
 	pickNextShape();
+}
+
+void TetrisGame::setHoldShape()
+{
+	// Hold shape has not yet been set this round
+	if (!holdShapeSetThisRound)
+	{
+		// If Hold shape has been set before
+		if (holdShapeSet)
+		{
+			GridTetromino temp = holdShape;
+
+			holdShape.setShape(currentShape.getShape());
+			currentShape.setShape(temp.getShape());
+			currentShape.setGridLoc(board.getSpawnLoc().getX(), board.getSpawnLoc().getY());
+		}
+		// If Hold shape has never been set before
+		else
+		{
+			holdShapeSet = true;
+		
+			holdShape.setShape(currentShape.getShape());
+			spawnNextShape();
+		}
+
+		holdShapeOffset = Point{ static_cast<int>(holdShapeCenter.getX() - (holdShape.getXViewBlockOffset() * BLOCK_WIDTH)),
+							     static_cast<int>(holdShapeCenter.getY() - (holdShape.getYViewBlockOffset() * BLOCK_HEIGHT)) };
+		holdShapeSetThisRound = true;
+	}
 }
 
 void TetrisGame::setStartingShapes()

@@ -45,7 +45,8 @@ int main()
 
 
 	// set up a tetris game
-	TetrisGame game(window, blockSprite, gameboardOffset, nextShapeCenter, firstNextShapeCenterPoint);
+	TetrisGame game(window, blockSprite, gameboardOffset, 
+		nextShapeCenter, holdShapeCenter);
 
 	// set up a clock so we can determine seconds per game loop
 	sf::Clock clock;		

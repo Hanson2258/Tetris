@@ -18,6 +18,9 @@ class TetrisGame
 		static const double MIN_SECONDS_PER_TICK; // The fastest "tick" rate (in seconds), init to 0.20
 		static const int NEXT_SHAPE_Y_SPACE;	  // What is the spacing between the next shapes in the Y column
 		static constexpr int NUM_NEXT_SHAPES{ 3 }; // Number of next shapes
+		static bool holdShapeSet;
+		static bool holdShapeSetThisRound;
+
 
 		~TetrisGame();
 
@@ -29,7 +32,8 @@ class TetrisGame
 		int score;					// The current game score.
 	    Gameboard board;			// The gameboard (grid) to represent where all the blocks are
 	    GridTetromino currentShape;	// The tetromino that is currently falling
-		
+	    GridTetromino holdShape;	// The tetromino that is on hold
+
 
 		// NextShape linked list
 		struct NextShapes
@@ -123,6 +127,8 @@ class TetrisGame
 		//  - Pick & spawn next shape
 		//  - Pick next shape again (for the "on-deck" shape)
 		void reset();
+
+		void setHoldShape();
 
 		// Set the starting shape, and populate 3 shapes for the linked list of
 		// next shapes
