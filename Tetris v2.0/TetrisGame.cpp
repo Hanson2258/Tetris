@@ -229,7 +229,7 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 	secondsSinceLastTick += secondsSinceLastLoop;
 	secondsSinceLastPlacement += secondsSinceLastLoop;
 
-	if ((secondsSinceLastTick > gameLoopTime[level-1][1]) || (secondsSinceLastPlacement > gameLoopTime[level-1][0]))
+	if ((secondsSinceLastTick > gameLoopTime[level-1][1]) || (secondsSinceLastPlacement > gameLoopTime[level-1][1]))
 	{
 		tick();
 		secondsSinceLastTick = 0;
