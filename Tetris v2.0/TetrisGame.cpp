@@ -277,6 +277,7 @@ void TetrisGame::setHoldShape()
 		
 			holdShape.setShape(currentShape.getShape());
 			spawnNextShape();
+			pickNextShape();
 		}
 
 		holdShapeOffset = Point{ static_cast<int>(holdShapeCenter.getX() - (holdShape.getXViewBlockOffset() * BLOCK_WIDTH)),
