@@ -16,7 +16,7 @@ const double TetrisGame::MIN_SECONDS_PER_TICK{ 0.20 };
 const int TetrisGame::NEXT_SHAPE_Y_SPACE{ 95 };
 bool TetrisGame::holdShapeSet = false;
 bool TetrisGame::holdShapeSetThisRound = false;
-const int TetrisGame::pauseTimeAfterShapePlaced{ 500 };
+const int TetrisGame::pauseTimeAfterShapePlaced{ 100 };
 
 // ====================================
 // ========= Member Functions =========
