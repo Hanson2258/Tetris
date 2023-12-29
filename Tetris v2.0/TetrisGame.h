@@ -20,6 +20,7 @@ class TetrisGame
 		static constexpr int NUM_NEXT_SHAPES{ 3 }; // Number of next shapes
 		static bool holdShapeSet;
 		static bool holdShapeSetThisRound;
+		static const int pauseTimeAfterShapePlaced;
 
 
 		~TetrisGame();

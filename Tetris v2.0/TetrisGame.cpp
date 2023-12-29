@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <chrono>
 #include <thread>
 
 #include "DebugNewOp.h"
@@ -15,6 +16,7 @@ const double TetrisGame::MIN_SECONDS_PER_TICK{ 0.20 };
 const int TetrisGame::NEXT_SHAPE_Y_SPACE{ 95 };
 bool TetrisGame::holdShapeSet = false;
 bool TetrisGame::holdShapeSetThisRound = false;
+const int TetrisGame::pauseTimeAfterShapePlaced{ 500 };
 
 // ====================================
 // ========= Member Functions =========
@@ -154,6 +156,8 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 
 void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 {
+	static bool needToPause = false;
+
 	secondsSinceLastTick += secondsSinceLastLoop;
 
 	if (secondsSinceLastTick > secondsPerTick)
@@ -162,9 +166,17 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 		secondsSinceLastTick = 0;
 	}
 
+	// Pause for
+	if (needToPause)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(pauseTimeAfterShapePlaced));
+		needToPause = false;
+	}
+
 	if (shapePlacedSinceLastGameLoop)
 	{
 		holdShapeSetThisRound = false;
+		needToPause = true;
 
 		if (spawnNextShape())
 		{
@@ -200,8 +212,8 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 		}
 		else
 		{
-			// // 5 Second pause after game end
-			// std::this_thread::sleep_for(std::chrono::seconds(5));
+			// 5 Second pause after game end
+			std::this_thread::sleep_for(std::chrono::seconds(5));
 
 			reset();
 		}
