@@ -6,6 +6,7 @@
 #include "Gameboard.h"
 #include "GridTetromino.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 
 class TetrisGame
@@ -92,7 +93,14 @@ class TetrisGame
 		double secondsSinceLastTick{ 0.0 };			  // This updates every game loop until it is >= secsPerTick,
 		double secondsSinceLastPlacement{ 0.0 };	  // The amount of time since the last shape placement
 
-		bool shapePlacedSinceLastGameLoop{ false };	  // Tracks if a shape has been placed (locked) in the current gameloop	
+		bool shapePlacedSinceLastGameLoop{ false };	  // Tracks if a shape has been placed (locked) in the current gameloop
+
+		// Audio members ----------------------------------------------
+		sf::Music tetrisMusic;
+		sf::Music blockDrop;
+		sf::Music blockRotate;
+		sf::Music levelUp;
+		sf::Music gameOver;
 
 	public:
 		// MEMBER FUNCTIONS
@@ -218,6 +226,13 @@ class TetrisGame
 
 
 
+		// ====================================
+		// ========= Graphics methods =========
+		// ====================================
+		void audioSetup();
+
+
+
 		// ======================================================
 		// =========== State & gameplay/logic methods ===========
 		// ======================================================
@@ -238,7 +253,7 @@ class TetrisGame
 		//	         of the grid, but *NOT* the top border (false otherwise)
 		bool isWithinBorders(const GridTetromino& shape) const;
 
-		void levelUp();
+		void updateLevel();
 };
 
 #endif /* TETRISGAME_H */

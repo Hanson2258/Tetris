@@ -59,13 +59,18 @@ TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const 
     : window(window), blockSprite(blockSprite), gameboardOffset(gameboardOffset),
 		nextShapeCenter(nextShapeCenter), holdShapeCenter(holdShapeCenter)
 {
-	reset();
-
 	// Setup our font for drawing the score
 	if (!font.loadFromFile("fonts/times new roman.ttf"))
 	{
 		assert(false && "Missing font: times new roman.ttf");
 	}
+
+	// Setup audio
+	audioSetup();
+
+	reset();
+
+	tetrisMusic.play();
 
 	// -- Set up text
 	// Title
@@ -172,6 +177,7 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 			if (attemptRotate(currentShape))
 			{
 				secondsSinceLastTick = 0;
+				blockRotate.play();
 			}
 
 			break;
@@ -211,6 +217,8 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 			score += drop(currentShape) * static_cast<int>(scoringActions::hardDrop);
 			updateScoreDisplay();
 			lock(currentShape);
+			blockDrop.play();
+
 			break;
 
 		default:
@@ -283,6 +291,8 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 		}
 		else
 		{
+			tetrisMusic.stop();
+			gameOver.play();
 			// 5 Second pause after game end
 			std::this_thread::sleep_for(std::chrono::seconds(5));
 
@@ -290,7 +300,7 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 		}
 
 		shapePlacedSinceLastGameLoop = false;
-		levelUp();
+		updateLevel();
 		updateLevelDisplay();
 		updateLinesDisplay();
 	}
@@ -330,6 +340,8 @@ void TetrisGame::reset()
 	setStartingShapes();
 	spawnNextShape();
 	pickNextShape();
+
+	tetrisMusic.play();
 }
 
 void TetrisGame::setHoldShape()
@@ -576,6 +588,44 @@ void TetrisGame::updateLinesDisplay()
 
 
 
+// ====================================
+// ========= Graphics methods =========
+// ====================================
+void TetrisGame::audioSetup()
+{
+	if (!tetrisMusic.openFromFile("sfx/tetrisMusic.ogg"))
+	{
+		assert(false && "Missing audio file: tetrisMusic.ogg");
+	}
+	tetrisMusic.setVolume(5.f);
+
+	if (!blockDrop.openFromFile("sfx/blockDrop.ogg"))
+	{
+		assert(false && "Missing audio file: blockDrop.ogg");
+	}
+	blockDrop.setVolume(35.f);
+
+	if (!blockRotate.openFromFile("sfx/blockRotate.ogg"))
+	{
+		assert(false && "Missing audio file: blockRotate.ogg");
+	}
+	blockRotate.setVolume(15.f);
+
+	if (!levelUp.openFromFile("sfx/levelUp.ogg"))
+	{
+		assert(false && "Missing audio file: levelUp.ogg");
+	}
+	levelUp.setVolume(25.f);
+
+	if (!gameOver.openFromFile("sfx/gameOver.ogg"))
+	{
+		assert(false && "Missing audio file: gameOver.ogg");
+	}
+	gameOver.setVolume(20.f);
+}
+
+
+
 // ======================================================
 // =========== State & gameplay/logic methods ===========
 // ======================================================
@@ -607,12 +657,15 @@ bool TetrisGame::isWithinBorders(const GridTetromino& shape) const
 	return true;
 }
 
-void TetrisGame::levelUp()
+void TetrisGame::updateLevel()
 {
 	if (level <= numLevels)
 	{
-		level = totalRowsCleared / 10;
-		level++;
+		if (level != (totalRowsCleared / 10 +1))
+		{
+			level = totalRowsCleared / 10 + 1;
+			levelUp.play();
+		}
 	}
 }
 
