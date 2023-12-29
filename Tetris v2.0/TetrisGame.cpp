@@ -73,6 +73,7 @@ TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const 
 void TetrisGame::draw() const
 {
 	drawTetromino(currentShape, gameboardOffset);
+	drawTetromino(ghostShape, gameboardOffset, 0.5f);
 
 	// NextShape* pHead = pNextShape;
 	// for (int i = 0; i < NUM_NEXT_SHAPES; i++)
@@ -105,6 +106,7 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 	{
 		case sf::Keyboard::Up:
 			attemptRotate(currentShape);
+
 			break;
 
 		case sf::Keyboard::Left:
@@ -142,6 +144,8 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 			assert("Something extremely broken!");  // NOLINT(clang-diagnostic-string-conversion)
 			break;
 	}
+
+	updateGhostShape();
 
 	// Update score display location based on score
 	scoreDisplay.setPosition(188 - (scoreDisplay.getLocalBounds().width / 2), 656 - (scoreDisplay.getLocalBounds().height));
@@ -329,19 +333,26 @@ bool TetrisGame::spawnNextShape()
 {
 	currentShape.setShape(pNextShapeHead->shape.getShape());
 	currentShape.setGridLoc(board.getSpawnLoc().getX(), board.getSpawnLoc().getY());
+	updateGhostShape();
 
 	return isPositionLegal(currentShape);
 }
 
+void TetrisGame::updateGhostShape()
+{
+	ghostShape = currentShape;
+	drop(ghostShape);
+}
 
-bool TetrisGame::attemptRotate(const GridTetromino& shape)
+
+bool TetrisGame::attemptRotate(GridTetromino& shape)
 {
 	GridTetromino tempTetromino{ shape };
 	tempTetromino.rotateClockwise();
 
 	if (isPositionLegal(tempTetromino))
 	{
-		currentShape.rotateClockwise();
+		shape.rotateClockwise();
 
 		return true;
 	}
@@ -349,14 +360,14 @@ bool TetrisGame::attemptRotate(const GridTetromino& shape)
 	return false;
 }
 
-bool TetrisGame::attemptMove(const GridTetromino& shape, const int x, const int y)
+bool TetrisGame::attemptMove(GridTetromino& shape, const int x, const int y)
 {
 	GridTetromino tempTetromino{ shape };
 	tempTetromino.move(x, y);
 
 	if (isPositionLegal(tempTetromino))
 	{
-		currentShape.move(x, y);
+		shape.move(x, y);
 
 		return true;
 	}
@@ -364,7 +375,7 @@ bool TetrisGame::attemptMove(const GridTetromino& shape, const int x, const int 
 	return false;
 }
 
-int TetrisGame::drop(const GridTetromino& shape)
+int TetrisGame::drop(GridTetromino& shape)
 {
 	int rowsDropped{ 0 };
 
@@ -394,7 +405,7 @@ void TetrisGame::lock(const GridTetromino& shape)
 // ========= Graphics methods =========
 // ====================================
 
-void TetrisGame::drawBlock(const Point& topLeft, const int xOffset, const int yOffset, const Tetromino::TetColor& color) const
+void TetrisGame::drawBlock(const Point& topLeft, const int xOffset, const int yOffset, const Tetromino::TetColor& color, float alpha) const
 {
 	sf::Texture texture;
 	texture.loadFromFile("./images/tiles.png", sf::IntRect(0, 0, BLOCK_WIDTH, BLOCK_HEIGHT));
@@ -402,6 +413,8 @@ void TetrisGame::drawBlock(const Point& topLeft, const int xOffset, const int yO
 	blockSprite.setTextureRect(sf::IntRect(0 + (static_cast<int>(color) * BLOCK_WIDTH), 0, BLOCK_WIDTH, BLOCK_HEIGHT));
 	blockSprite.setPosition(static_cast<float>(topLeft.getX()) + static_cast<float>(BLOCK_WIDTH  * xOffset),
 							static_cast<float>(topLeft.getY()) + static_cast<float>(BLOCK_HEIGHT * yOffset));
+	
+	blockSprite.setColor(sf::Color(blockSprite.getColor().r, blockSprite.getColor().g, blockSprite.getColor().b, (255 * alpha)));
 
 	window.draw(blockSprite);
 }
@@ -419,13 +432,13 @@ void TetrisGame::drawGameboard() const
 	}
 }
 
-void TetrisGame::drawTetromino(const GridTetromino& tetromino, const Point& topLeft) const
+void TetrisGame::drawTetromino(const GridTetromino& tetromino, const Point& topLeft, float alpha) const
 {
 	const std::vector<Point> tetrominoLoc{ tetromino.getBlockLocsMappedToGrid() };
 
 	for (int i{ 0 }; i < static_cast<int>(tetrominoLoc.size()); i++)
 	{
-		drawBlock(topLeft, tetrominoLoc[i].getX(), tetrominoLoc[i].getY(), tetromino.getColor());
+		drawBlock(topLeft, tetrominoLoc[i].getX(), tetrominoLoc[i].getY(), tetromino.getColor(), alpha);
 	}
 }
 

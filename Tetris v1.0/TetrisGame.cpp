@@ -181,7 +181,7 @@ bool TetrisGame::spawnNextShape()
 }
 
 
-bool TetrisGame::attemptRotate(const GridTetromino& shape)
+bool TetrisGame::attemptRotate(GridTetromino& shape)
 {
 	GridTetromino tempTetromino{ shape };
 	tempTetromino.rotateClockwise();
@@ -196,7 +196,7 @@ bool TetrisGame::attemptRotate(const GridTetromino& shape)
 	return false;
 }
 
-bool TetrisGame::attemptMove(const GridTetromino& shape, const int x, const int y)
+bool TetrisGame::attemptMove(GridTetromino& shape, const int x, const int y)
 {
 	GridTetromino tempTetromino{ shape };
 	tempTetromino.move(x, y);
@@ -211,7 +211,7 @@ bool TetrisGame::attemptMove(const GridTetromino& shape, const int x, const int 
 	return false;
 }
 
-int TetrisGame::drop(const GridTetromino& shape)
+int TetrisGame::drop(GridTetromino& shape)
 {
 	int rowsDropped{ 0 };
 
