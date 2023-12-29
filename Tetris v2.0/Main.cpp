@@ -4,7 +4,9 @@
 
 
 int main()
-{	
+{
+	_CrtMemDumpAllObjectsSince(NULL); // for detecting memory leaks
+
 	// // run some sanity tests on our classes to ensure they're working as expected.
 	// TestSuite::runTestSuite();
 
@@ -80,6 +82,8 @@ int main()
 		game.draw();					// draw the game (onto the window)
 		window.display();				// re-display the entire window
 	}
+
+
 	
 	return 0;
 }

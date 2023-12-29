@@ -141,6 +141,7 @@
     <ClCompile Include="Tetromino.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DebugNewOp.h" />
     <ClInclude Include="Gameboard.h" />
     <ClInclude Include="GridTetromino.h" />
     <ClInclude Include="Point.h" />

@@ -4,6 +4,9 @@
 #include <iostream>
 #include <thread>
 
+#include "DebugNewOp.h"
+
+
 // Initializing the static variables
 const int TetrisGame::BLOCK_WIDTH{ 32 };
 const int TetrisGame::BLOCK_HEIGHT{ 32 };
@@ -274,7 +277,7 @@ void TetrisGame::pickNextShape()
 	pTemp = addNewShape();
 
 	pNextShapeTail->pNext = pTemp;
-	pNextShapeTail = pTemp;
+	pNextShapeTail = pNextShapeTail->pNext;
 
 	// Recalculate y-axis for all shapes
 	pTemp = pNextShapeHead;
@@ -285,9 +288,6 @@ void TetrisGame::pickNextShape()
 
 		pTemp = pTemp->pNext;
 	}
-
-	// Delete pTemp
-	delete pTemp;
 }
 
 bool TetrisGame::spawnNextShape()
