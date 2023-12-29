@@ -14,14 +14,17 @@ class TetrisGame
 		// STATIC CONSTANTS
 		static const int BLOCK_WIDTH;			  // Pixel width of a Tetris block, init to 32
 		static const int BLOCK_HEIGHT;			  // Pixel height of a Tetris block, int to 32
-		static const double MAX_SECONDS_PER_TICK; // The slowest "tick" rate (in seconds), init to 0.75
-		static const double MIN_SECONDS_PER_TICK; // The fastest "tick" rate (in seconds), init to 0.20
 		static const int NEXT_SHAPE_Y_SPACE;	  // What is the spacing between the next shapes in the Y column
 		static constexpr int NUM_NEXT_SHAPES{ 3 }; // Number of next shapes
 		static bool holdShapeSet;
 		static bool holdShapeSetThisRound;
 		static const int pauseTimeAfterShapePlaced;
 
+		// Time members ----------------------------------------------
+		// Note: a "tick" is the amount of time it takes a block to fall one line.
+		static constexpr int numLevels{ 30 };
+		static constexpr int numGameLoopElements{ 2 }; // secondPerGameLoop, secondsPerTick
+		static double gameLoopTime[numLevels][numGameLoopElements];
 
 		~TetrisGame();
 
@@ -60,6 +63,8 @@ class TetrisGame
 			softDrop       =   1,
 			hardDrop       =   2
 		};
+
+		int totalRowsCleared{ 0 };    // Total lines cleared
 		
 		// Graphics members ------------------------------------------
 		sf::RenderWindow& window;		// The window that we are drawing on
@@ -76,12 +81,16 @@ class TetrisGame
 		sf::Text nextBlock;				// SFML text object for displaying the next blocks
 		sf::Text scoreTitle;			// SFML text object for displaying the score title
 		sf::Text scoreDisplay;			// SFML text object for displaying the score
-										
+		sf::Text levelTitle;			// SFML text object for displaying the level title
+		sf::Text levelDisplay;			// SFML text object for displaying the level
+		sf::Text linesTitle;			// SFML text object for displaying the lines (rows cleared) title
+		sf::Text linesDisplay;			// SFML text object for displaying the lines (rows cleared)
+
 		// Time members ----------------------------------------------
 		// Note: a "tick" is the amount of time it takes a block to fall one line.
-		double secondsPerTick = MAX_SECONDS_PER_TICK; // The seconds per tick (changes depending on score)	
-
+		int level{ 1 };
 		double secondsSinceLastTick{ 0.0 };			  // This updates every game loop until it is >= secsPerTick,
+		double secondsSinceLastPlacement{ 0.0 };	  // The amount of time since the last shape placement
 
 		bool shapePlacedSinceLastGameLoop{ false };	  // Tracks if a shape has been placed (locked) in the current gameloop	
 
@@ -203,6 +212,10 @@ class TetrisGame
 		// Forms a string "score: ##" to display the current score
 		void updateScoreDisplay();
 
+		void updateLevelDisplay();
+
+		void updateLinesDisplay();
+
 
 
 		// ======================================================
@@ -225,10 +238,7 @@ class TetrisGame
 		//	         of the grid, but *NOT* the top border (false otherwise)
 		bool isWithinBorders(const GridTetromino& shape) const;
 
-		// Set secsPerTick based on current score
-		// Speed increases by 0.055 ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.1)
-		// every 3,000 points.
-		void determineSecondsPerTick();
+		void levelUp();
 };
 
 #endif /* TETRISGAME_H */

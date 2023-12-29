@@ -11,12 +11,44 @@
 // Initializing the static variables
 const int TetrisGame::BLOCK_WIDTH{ 32 };
 const int TetrisGame::BLOCK_HEIGHT{ 32 };
-const double TetrisGame::MAX_SECONDS_PER_TICK{ 0.75 };
-const double TetrisGame::MIN_SECONDS_PER_TICK{ 0.20 };
 const int TetrisGame::NEXT_SHAPE_Y_SPACE{ 95 };
 bool TetrisGame::holdShapeSet = false;
 bool TetrisGame::holdShapeSetThisRound = false;
 const int TetrisGame::pauseTimeAfterShapePlaced{ 100 };
+
+double TetrisGame::gameLoopTime[TetrisGame::numLevels][TetrisGame::numGameLoopElements]
+{
+	{15.974, gameLoopTime[ 0][0] / Gameboard::MAX_Y}, //  0
+	{14.310, gameLoopTime[ 1][0] / Gameboard::MAX_Y}, //  1
+	{12.646, gameLoopTime[ 2][0] / Gameboard::MAX_Y}, //  2
+	{10.982, gameLoopTime[ 3][0] / Gameboard::MAX_Y}, //  3
+	{ 9.318, gameLoopTime[ 4][0] / Gameboard::MAX_Y}, //  4
+	{ 7.654, gameLoopTime[ 5][0] / Gameboard::MAX_Y}, //  5
+	{ 5.990, gameLoopTime[ 6][0] / Gameboard::MAX_Y}, //  6
+	{ 4.326, gameLoopTime[ 7][0] / Gameboard::MAX_Y}, //  7
+	{ 2.662, gameLoopTime[ 8][0] / Gameboard::MAX_Y}, //  8
+	{ 1.997, gameLoopTime[ 9][0] / Gameboard::MAX_Y}, //  9
+	{ 1.664, gameLoopTime[10][0] / Gameboard::MAX_Y}, // 10
+	{ 1.664, gameLoopTime[11][0] / Gameboard::MAX_Y}, // 11
+	{ 1.664, gameLoopTime[12][0] / Gameboard::MAX_Y}, // 12
+	{ 1.331, gameLoopTime[13][0] / Gameboard::MAX_Y}, // 13
+	{ 1.331, gameLoopTime[14][0] / Gameboard::MAX_Y}, // 14
+	{ 1.331, gameLoopTime[15][0] / Gameboard::MAX_Y}, // 15
+	{ 0.998, gameLoopTime[16][0] / Gameboard::MAX_Y}, // 16
+	{ 0.998, gameLoopTime[17][0] / Gameboard::MAX_Y}, // 17
+	{ 0.998, gameLoopTime[18][0] / Gameboard::MAX_Y}, // 18
+	{ 0.666, gameLoopTime[19][0] / Gameboard::MAX_Y}, // 19
+	{ 0.666, gameLoopTime[20][0] / Gameboard::MAX_Y}, // 20
+	{ 0.666, gameLoopTime[21][0] / Gameboard::MAX_Y}, // 21
+	{ 0.666, gameLoopTime[22][0] / Gameboard::MAX_Y}, // 22
+	{ 0.666, gameLoopTime[23][0] / Gameboard::MAX_Y}, // 23
+	{ 0.666, gameLoopTime[22][0] / Gameboard::MAX_Y}, // 24
+	{ 0.666, gameLoopTime[25][0] / Gameboard::MAX_Y}, // 25
+	{ 0.666, gameLoopTime[26][0] / Gameboard::MAX_Y}, // 26
+	{ 0.666, gameLoopTime[27][0] / Gameboard::MAX_Y}, // 27
+	{ 0.666, gameLoopTime[28][0] / Gameboard::MAX_Y}, // 28
+	{ 0.333, gameLoopTime[29][0] / Gameboard::MAX_Y}  // 29
+};
 
 // ====================================
 // ========= Member Functions =========
@@ -62,13 +94,39 @@ TetrisGame::TetrisGame(sf::RenderWindow& window, sf::Sprite& blockSprite, const 
 	scoreTitle.setFont(font);
 	scoreTitle.setCharacterSize(25);
 	scoreTitle.setFillColor(sf::Color::White);
-	scoreTitle.setPosition(187 - (scoreTitle.getLocalBounds().width / 2), 622 - (scoreTitle.getLocalBounds().height));
+	scoreTitle.setPosition(187 - (scoreTitle.getLocalBounds().width / 2), 468 - (scoreTitle.getLocalBounds().height));
 
 	// Score Display
 	scoreDisplay.setFont(font);
 	scoreDisplay.setCharacterSize(18);
 	scoreDisplay.setFillColor(sf::Color::White);
-	scoreDisplay.setPosition(188 - (scoreDisplay.getLocalBounds().width / 2), 656 - (scoreDisplay.getLocalBounds().height));
+	scoreDisplay.setPosition(188 - (scoreDisplay.getLocalBounds().width / 2), 502 - (scoreDisplay.getLocalBounds().height));
+
+	// Level Title
+	levelTitle.setString("Level");
+	levelTitle.setFont(font);
+	levelTitle.setCharacterSize(25);
+	levelTitle.setFillColor(sf::Color::White);
+	levelTitle.setPosition(187 - (levelTitle.getLocalBounds().width / 2), 545 - (levelTitle.getLocalBounds().height));
+
+	// Level Display
+	levelDisplay.setFont(font);
+	levelDisplay.setCharacterSize(18);
+	levelDisplay.setFillColor(sf::Color::White);
+	levelDisplay.setPosition(188 - (levelDisplay.getLocalBounds().width / 2), 580 - (levelDisplay.getLocalBounds().height));
+
+	// Lines (rows cleared) Title
+	linesTitle.setString("Lines");
+	linesTitle.setFont(font);
+	linesTitle.setCharacterSize(25);
+	linesTitle.setFillColor(sf::Color::White);
+	linesTitle.setPosition(187 - (linesTitle.getLocalBounds().width / 2), 622 - (linesTitle.getLocalBounds().height));
+
+	// Lines (rows cleared) Display
+	linesDisplay.setFont(font);
+	linesDisplay.setCharacterSize(18);
+	linesDisplay.setFillColor(sf::Color::White);
+	linesDisplay.setPosition(188 - (linesDisplay.getLocalBounds().width / 2), 656 - (linesDisplay.getLocalBounds().height));
 }
 
 
@@ -100,6 +158,10 @@ void TetrisGame::draw() const
 	window.draw(nextBlock);
 	window.draw(scoreTitle);
 	window.draw(scoreDisplay);
+	window.draw(levelTitle);
+	window.draw(levelDisplay);
+	window.draw(linesTitle);
+	window.draw(linesDisplay);
 }
 
 void TetrisGame::onKeyPressed(const sf::Event& event)
@@ -107,12 +169,18 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 	switch (event.key.code)
 	{
 		case sf::Keyboard::Up:
-			attemptRotate(currentShape);
+			if (attemptRotate(currentShape))
+			{
+				secondsSinceLastTick = 0;
+			}
 
 			break;
 
 		case sf::Keyboard::Left:
-			attemptMove(currentShape,-1,0);
+			if (attemptMove(currentShape,-1,0))
+			{
+				secondsSinceLastTick = 0;
+			}
 			break;
 
 		case sf::Keyboard::Down:
@@ -129,7 +197,10 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 			break;
 
 		case sf::Keyboard::Right:
-			attemptMove(currentShape,1,0);
+			if (attemptMove(currentShape,1,0))
+			{
+				secondsSinceLastTick = 0;
+			}
 			break;
 
 		case sf::Keyboard::C:
@@ -148,9 +219,6 @@ void TetrisGame::onKeyPressed(const sf::Event& event)
 	}
 
 	updateGhostShape();
-
-	// Update score display location based on score
-	scoreDisplay.setPosition(188 - (scoreDisplay.getLocalBounds().width / 2), 656 - (scoreDisplay.getLocalBounds().height));
 }
 
 
@@ -159,11 +227,13 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 	static bool needToPause = false;
 
 	secondsSinceLastTick += secondsSinceLastLoop;
+	secondsSinceLastPlacement += secondsSinceLastLoop;
 
-	if (secondsSinceLastTick > secondsPerTick)
+	if ((secondsSinceLastTick > gameLoopTime[level-1][1]) || (secondsSinceLastPlacement > gameLoopTime[level-1][0]))
 	{
 		tick();
 		secondsSinceLastTick = 0;
+		secondsSinceLastPlacement = 0;
 	}
 
 	// Pause for
@@ -183,6 +253,7 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 			pickNextShape();
 
 			const int rowsCleared = board.removeCompletedRows();
+			totalRowsCleared += rowsCleared;
 
 			switch (rowsCleared)
 			{
@@ -219,6 +290,9 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 		}
 
 		shapePlacedSinceLastGameLoop = false;
+		levelUp();
+		updateLevelDisplay();
+		updateLinesDisplay();
 	}
 }
 
@@ -239,9 +313,11 @@ void TetrisGame::tick()
 void TetrisGame::reset()
 {
 	score = 0;
+	level = 1;
+	totalRowsCleared = 0;
 	updateScoreDisplay();
-
-	determineSecondsPerTick();
+	updateLevelDisplay();
+	updateLinesDisplay();
 
 	board.empty();
 
@@ -477,6 +553,25 @@ void TetrisGame::drawTetromino(const GridTetromino& tetromino, const Point& topL
 void TetrisGame::updateScoreDisplay()
 {
 	scoreDisplay.setString(std::to_string(score));
+
+	// Update score display location based on score
+	scoreDisplay.setPosition(188 - (scoreDisplay.getLocalBounds().width / 2), 502 - (scoreDisplay.getLocalBounds().height));
+}
+
+void TetrisGame::updateLevelDisplay()
+{
+	levelDisplay.setString(std::to_string(level));
+
+	// Update level display location based on level
+	levelDisplay.setPosition(188 - (levelDisplay.getLocalBounds().width / 2), 579 - (levelDisplay.getLocalBounds().height));
+}
+
+void TetrisGame::updateLinesDisplay()
+{
+	linesDisplay.setString(std::to_string(totalRowsCleared));
+
+	// Update score display location based on score
+	linesDisplay.setPosition(188 - (linesDisplay.getLocalBounds().width / 2), 656 - (linesDisplay.getLocalBounds().height));
 }
 
 
@@ -512,51 +607,12 @@ bool TetrisGame::isWithinBorders(const GridTetromino& shape) const
 	return true;
 }
 
-void TetrisGame::determineSecondsPerTick()
+void TetrisGame::levelUp()
 {
-	if (score < 3000)
+	if (level <= numLevels)
 	{
-		secondsPerTick = MAX_SECONDS_PER_TICK;
-	}
-	else if (score < 6000)
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK + ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.9);
-	}
-	else if (score < 9000)
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK + ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.8);
-	}
-	else if (score < 12000)
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK + ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.7);
-	}
-	else if (score < 15000)
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK + ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.6);
-	}
-	else if (score < 18000)
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK + ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.5);
-	}
-	else if (score < 21000)
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK + ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.4);
-	}
-	else if (score < 24000)
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK + ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.3);
-	}
-	else if (score < 27000)
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK + ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.2);
-	}
-	else if (score < 30000)
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK + ((MAX_SECONDS_PER_TICK - MIN_SECONDS_PER_TICK) * 0.1);
-	}
-	else
-	{
-		secondsPerTick = MIN_SECONDS_PER_TICK;
+		level = totalRowsCleared / 10;
+		level++;
 	}
 }
 
