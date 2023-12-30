@@ -1,5 +1,6 @@
 #pragma once
-#include "crtdbg.h"			// for detecting memory leaks
+#include "crtdbg.h"			// For detecting memory leaks
+
 
 // This header file is intended to assist with debugging memory leaks.
 // Include it in header or cpp files that use the new keyword to dynamically
@@ -14,13 +15,13 @@
 // https://learn.microsoft.com/en-us/troubleshoot/developer/visualstudio/cpp/libraries/crtdbg-map-alloc-macro-not-work
 
 
-// if we're creating a debug build
+// If we're creating a debug build
 #ifdef _DEBUG												
 
-// define a debug version of the new operator
+// Define a debug version of the new operator
 #define MYDEBUG_NEW new( _NORMAL_BLOCK, __FILE__, __LINE__) 
 
-// anywhere new is used in code, replace it with the debug version
+// Anywhere new is used in code, replace it with the debug version
 #define new MYDEBUG_NEW		
 
 #endif	// _DEBUG

@@ -1,8 +1,9 @@
+#include <sstream>
 #include "Point.h"
 
-#include <sstream>
 
-// Default Constructor
+// Constructor ------------------------------------------------------------
+
 Point::Point()
 {
 	setX(0);
@@ -16,33 +17,45 @@ Point::Point(const int x, const int y)
 }
 
 
+// METHODS ----------------------------------------------------------------
+
+// Getters ---------------------------------
+
 int Point::getX() const
 {
 	return x;
 }
+
 int Point::getY() const
 {
 	return y;
 }
 
 
+// Setters ---------------------------------
+
 void Point::setX(const int x)
 {
 	this->x = x;
 }
+
 void Point::setY(const int y)
 {
 	this->y = y;
 }
+
 void Point::setXY(const int x, const int y)
 {
 	setX(x);
 	setY(y);
 }
 
+
+// Other Methods ---------------------------------
+
 void Point::swapXY()
 {
-	const int oldX{ getX() };
+	const int oldX{getX()};
 
 	setX(getY());
 	setY(oldX);
@@ -53,6 +66,7 @@ void Point::multiplyX(const int factor)
 {
 	setX(getX() * factor);
 }
+
 void Point::multiplyY(const int factor)
 {
 	setY(getY() * factor);

@@ -2,14 +2,23 @@
 
 #include <iostream>
 
-// Initializing the static variables
-bool Tetromino::chosenShapes[];  // A bool array of size TetShape::COUNT
-int Tetromino::numChosenShapes;	// Num of shapes chosen
+
+// STATIC VARIABLE INITIALIZATION -----------------------------------------
+bool Tetromino::chosenShapes[];
+int Tetromino::numChosenShapes;
+
+
+// Constructor ------------------------------------------------------------
 
 Tetromino::Tetromino()
 {
 	setShape(TetShape::S);
 }
+
+
+// METHODS ----------------------------------------------------------------
+
+// Getters ---------------------------------
 
 Tetromino::TetColor Tetromino::getColor() const
 {
@@ -20,6 +29,9 @@ Tetromino::TetShape Tetromino::getShape() const
 {
 	return shape;
 }
+
+
+// Other Methods ---------------------------------
 
 Tetromino::TetShape Tetromino::getRandomShape(bool reset)
 {
@@ -45,15 +57,13 @@ Tetromino::TetShape Tetromino::getRandomShape(bool reset)
 		{
 			randNum++;
 		}
-		
 	}
 
 	chosenShapes[randNum] = true;
 	numChosenShapes++;
 
- 	return static_cast<TetShape>(randNum);
+	return static_cast<TetShape>(randNum);
 }
-
 
 void Tetromino::setShape(const TetShape& shape)
 {
@@ -61,108 +71,108 @@ void Tetromino::setShape(const TetShape& shape)
 
 	switch (this->shape)
 	{
-		case TetShape::S:
-			blockLocs = {
-				Point(-1, 0),
-				Point( 0, 0),
-				Point( 0, 1),
-				Point( 1, 1)
-			};
-			color = TetColor::RED;
+	case TetShape::S:
+		blockLocs = {
+			Point(-1, 0),
+			Point(0, 0),
+			Point(0, 1),
+			Point(1, 1)
+		};
+		color = TetColor::RED;
 
-			xViewBlockOffset = 0.5;
-			yViewBlockOffset = 1;
+		xViewBlockOffset = 0.5;
+		yViewBlockOffset = 1;
 
-			break;
+		break;
 
-		case TetShape::Z:
-			blockLocs = {
-				Point(-1, 1),
-				Point( 0, 1),
-				Point( 0, 0),
-				Point( 1, 0)
-			};
-			color = TetColor::GREEN;
+	case TetShape::Z:
+		blockLocs = {
+			Point(-1, 1),
+			Point(0, 1),
+			Point(0, 0),
+			Point(1, 0)
+		};
+		color = TetColor::GREEN;
 
-			xViewBlockOffset = 0.5;
-			yViewBlockOffset = 1;
+		xViewBlockOffset = 0.5;
+		yViewBlockOffset = 1;
 
-			break;
+		break;
 
-		case TetShape::J:
-			blockLocs = {
-				Point(-1,-1),
-				Point(-1, 0),
-				Point( 0, 0),
-				Point( 1, 0)
-			};
-			color = TetColor::BLUE_DARK;
+	case TetShape::J:
+		blockLocs = {
+			Point(-1, -1),
+			Point(-1, 0),
+			Point(0, 0),
+			Point(1, 0)
+		};
+		color = TetColor::BLUE_DARK;
 
-			xViewBlockOffset = 0.5;
-			yViewBlockOffset = 0;
+		xViewBlockOffset = 0.5;
+		yViewBlockOffset = 0;
 
-			break;
+		break;
 
-		case TetShape::L:
-			blockLocs = {
-				Point(-1, 0),
-				Point( 0, 0),
-				Point( 1, 0),
-				Point( 1,-1)
-			};
-			color = TetColor::ORANGE;
+	case TetShape::L:
+		blockLocs = {
+			Point(-1, 0),
+			Point(0, 0),
+			Point(1, 0),
+			Point(1, -1)
+		};
+		color = TetColor::ORANGE;
 
-			xViewBlockOffset = 0.5;
-			yViewBlockOffset = 0;
+		xViewBlockOffset = 0.5;
+		yViewBlockOffset = 0;
 
-			break;
+		break;
 
-		case TetShape::O:
-			blockLocs = {
-				Point(-1, 0),
-				Point(-1, 1),
-				Point( 0, 1),
-				Point( 0, 0)
-			};
-			color = TetColor::YELLOW;
+	case TetShape::O:
+		blockLocs = {
+			Point(-1, 0),
+			Point(-1, 1),
+			Point(0, 1),
+			Point(0, 0)
+		};
+		color = TetColor::YELLOW;
 
-			xViewBlockOffset = 0;
-			yViewBlockOffset = 1;
+		xViewBlockOffset = 0;
+		yViewBlockOffset = 1;
 
-			break;
+		break;
 
-		case TetShape::I:
-			blockLocs = {
-				Point(-2, 0),
-				Point(-1, 0),
-				Point(0, 0),
-				Point(1,0)
-			};
-			color = TetColor::BLUE_LIGHT;
+	case TetShape::I:
+		blockLocs = {
+			Point(-2, 0),
+			Point(-1, 0),
+			Point(0, 0),
+			Point(1, 0)
+		};
+		color = TetColor::BLUE_LIGHT;
 
-			xViewBlockOffset = 0;
-			yViewBlockOffset = 0.5;
+		xViewBlockOffset = 0;
+		yViewBlockOffset = 0.5;
 
-			break;
+		break;
 
-		case TetShape::T:
-			blockLocs = {
-				Point(-1, 0),
-				Point( 0, 0),
-				Point( 1, 0),
-				Point( 0,-1)
-			};
-			color = TetColor::PURPLE;
+	case TetShape::T:
+		blockLocs = {
+			Point(-1, 0),
+			Point(0, 0),
+			Point(1, 0),
+			Point(0, -1)
+		};
+		color = TetColor::PURPLE;
 
-			xViewBlockOffset = 0.5;
-			yViewBlockOffset = 0;
+		xViewBlockOffset = 0.5;
+		yViewBlockOffset = 0;
 
-			break;
+		break;
 
-		default:
-			std::cout << "\n--------------------------"
-				"		  \nSOMETHING EXTREMELY BROKEN"
-				"         \n---------------------------\n";
+	default:
+		std::cout << "\n--------------------------"
+			"		  \nSOMETHING EXTREMELY BROKEN"
+			"         \n---------------------------\n";
 	}
 }
 
@@ -176,15 +186,18 @@ void Tetromino::rotateClockwise()
 			blockLoc.swapXY();
 			blockLoc.multiplyY(-1);
 		}
-	} 
+	}
 }
+
 
 void Tetromino::printToConsole() const
 {
-	for (int y{ 3 }; y >= -3; y--) {
-		for (int x{ -3 }; x <= 3; x++) {
-
-			for (int i{ 0 }; i < static_cast<int>(blockLocs.size()); i++) {
+	for (int y{3}; y >= -3; y--)
+	{
+		for (int x{-3}; x <= 3; x++)
+		{
+			for (int i{0}; i < static_cast<int>(blockLocs.size()); i++)
+			{
 				if ((blockLocs[i].getX() == x) && (blockLocs[i].getY() == y))
 				{
 					std::cout << "X";
@@ -197,7 +210,6 @@ void Tetromino::printToConsole() const
 					std::cout << ".";
 				}
 			}
-
 		}
 
 		std::cout << "\n";
