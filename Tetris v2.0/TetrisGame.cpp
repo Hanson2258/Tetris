@@ -505,8 +505,8 @@ void TetrisGame::setHoldShape()
 		}
 
 		holdShapeOffset = Point{
-			static_cast<int>(holdShapeCenter.getX() - (holdShape.getXViewBlockOffset() * BLOCK_WIDTH)),
-			static_cast<int>(holdShapeCenter.getY() - (holdShape.getYViewBlockOffset() * BLOCK_HEIGHT))
+			holdShapeCenter.getX() - static_cast<int>(holdShape.getXViewBlockOffset() * BLOCK_WIDTH),
+			holdShapeCenter.getY() - static_cast<int>(holdShape.getYViewBlockOffset() * BLOCK_HEIGHT)
 		};
 		holdShapeSetThisRound = true;
 	}
@@ -639,7 +639,7 @@ void TetrisGame::drawBlock(const Point& topLeft, const int xOffset, const int yO
 	                        static_cast<float>(topLeft.getY()) + static_cast<float>(BLOCK_HEIGHT * yOffset));
 
 	blockSprite.setColor(sf::Color(blockSprite.getColor().r, blockSprite.getColor().g, blockSprite.getColor().b,
-	                               (255 * alpha)));
+	                               static_cast<sf::Uint8>(alpha * 255))); // 255 is the max alpha/ transparency, the lower the number, the more transparent the sprite
 
 	window.draw(blockSprite);
 }

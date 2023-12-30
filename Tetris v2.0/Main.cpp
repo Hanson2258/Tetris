@@ -1,4 +1,3 @@
-#include <iostream>
 #include <SFML/Graphics.hpp>
 
 #include "TetrisGame.h"
@@ -9,7 +8,7 @@ int main()
 	// _CrtMemDumpAllObjectsSince(NULL); // For detecting memory leaks
 
 	// Seeding the randomizer
-	srand(static_cast<unsigned int>(time(nullptr)));
+	srand(static_cast<unsigned int>(time(nullptr)));  // NOLINT(cert-msc51-cpp)
 
 	// Declaring SFML sprite and textures
 	sf::Sprite blockSprite;			// The Tetromino block sprite
@@ -49,8 +48,8 @@ int main()
 	// Set up a clock so we can determine seconds per game loop
 	sf::Clock clock;
 
-	// Create an event for handling userInput from the GUI (graphical user interface)
-	sf::Event guiEvent;
+	// // Create an event for handling userInput from the GUI (graphical user interface)
+	// sf::Event guiEvent;
 
 	// The main game loop
 	while (window.isOpen())
