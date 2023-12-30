@@ -124,20 +124,20 @@ class TetrisGame
 		// Test if a rotation is legal on the tetromino and if so, rotate it. 
 		// - param 1: GridTetromino shape
 		// - return: bool, true/false to indicate successful movement
-		bool attemptRotate(const GridTetromino& shape);
+		bool attemptRotate(GridTetromino& shape);
 	   
 		// Test if a move is legal on the tetromino, if so, move it.
 		// - param 1: GridTetromino shape
 		// - param 2: int x (cols)
 		// - param 3: int y (rows)
 		// - return: true/false to indicate successful movement
-		bool attemptMove(const GridTetromino& shape, const int x, const int y);
+		bool attemptMove(GridTetromino& shape, const int x, const int y);
 
 		// Drops the tetromino vertically as far as it can legally go.
 		// (Originally void, changed to int for better scoring.)
 		// - param 1: GridTetromino shape
 		// - return: int of num rows dropped
-		int drop(const GridTetromino& shape);
+		int drop(GridTetromino& shape);
 
 		// Copy the contents (color) of the tetromino's mapped block locs to the grid.
 		// - param 1: GridTetromino shape
