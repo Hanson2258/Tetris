@@ -267,22 +267,22 @@ void TetrisGame::processGameLoop(const float secondsSinceLastLoop)
 			switch (rowsCleared)
 			{
 			case (4):
-				score += static_cast<int>(scoringActions::Tetris);
+				score += static_cast<int>(scoringActions::Tetris) * level;
 				updateScoreDisplay();
 				break;
 
 			case (3):
-				score += static_cast<int>(scoringActions::tripleRowClear);
+				score += static_cast<int>(scoringActions::tripleRowClear) * level;
 				updateScoreDisplay();
 				break;
 
 			case (2):
-				score += static_cast<int>(scoringActions::doubleRowClear);
+				score += static_cast<int>(scoringActions::doubleRowClear) * level;
 				updateScoreDisplay();
 				break;
 
 			case (1):
-				score += static_cast<int>(scoringActions::singleRowClear);
+				score += static_cast<int>(scoringActions::singleRowClear) * level;
 				updateScoreDisplay();
 				break;
 
@@ -707,6 +707,7 @@ void TetrisGame::audioSetup()
 		assert(false && "Missing audio file: tetrisMusic.ogg");
 	}
 	tetrisMusic.setVolume(5.f);
+	tetrisMusic.setLoop(true);
 
 	if (!blockDrop.openFromFile("sfx/blockDrop.ogg"))
 	{
